@@ -28,7 +28,8 @@ class Environment {
         this.vars.push({
             name,
             type,
-            addr
+            addr,
+            version: 0,
         });
         return addr;
     }
@@ -43,6 +44,17 @@ class Environment {
                 return [vardata[0], vardata[1] + 1];
             }
             else throw `Variable ${name} doesn't exist`;
+        }
+    }
+
+    update(name) {
+        const current = this.vars.findIndex(v => v.name == name);
+        if(current >= 0) {
+            this.vars[current].version++;
+        } else {
+            if(this.parent != undefined) {
+                this.parent.update(name);
+            } else throw `Variable ${name} doesn't exist`;
         }
     }
 }
